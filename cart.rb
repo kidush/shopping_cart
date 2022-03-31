@@ -26,7 +26,7 @@ class Cart
     indexes_to_remove = []
 
     cart.each.with_index do |item, index|
-       indexes_to_remove << index if item.name == product.name
+      indexes_to_remove << index if item.name == product.name
     end
 
     return cart.delete_at(indexes_to_remove.last) if amount == 1
