@@ -69,7 +69,7 @@ RSpec.describe Cart do
           cart.add(product: product_b, amount: 2)
 
           expect(cart.total_price(tax: true)).to eq 314.96
-          expect(cart.sale_tax).to eq 35.00
+          expect(cart.total_tax).to eq 35.00
         end
 
         context 'When the users add the products and want to figure out how many products they have of a certain type' do
@@ -99,7 +99,42 @@ RSpec.describe Cart do
             expect(cart.size).to eq 3
           end
         end
+
+        # Given the customer has 4 _Dove Soaps_ and 2 _Axe Deos_ in their cart
+        # 	When the customer removes 1 _Dove Soap_
+        # 	Then the number of _Dove Soaps_ should be 3
+        # 	And the total & the sales tax should reflect the change
+        # 	Expected totals =>
+        # 		Total tax = 39.99
+        # 		Total price = 359.94
+
+        context 'Given the customer has 4 _Dove Soaps_ and 2 _Axe Deos_ in their cart' do
+          context 'When the customer removes 1 _Dove Soap_' do
+            before(:each) do
+              product_a = Product.new("Dove Soaps", 3999)
+              product_b = Product.new("Axe Deo", 9999)
+
+              @cart = described_class.new
+              @cart.add(product: product_a, amount: 4)
+              @cart.add(product: product_b, amount: 2)
+
+              @cart.remove_item(product: product_a, amount: 1)
+            end
+
+            it 'The number of Dove Soaps should be 3' do
+              expect(@cart.size).to eq(5)
+            end
+
+            it 'And the total & the sales tax should reflect the change' do
+              expect(@cart.total_price(tax: true)).to eq(359.94)
+            end
+
+            it 'And the total tax should reflect the change' do
+              expect(@cart.total_tax).to eq(39.99)
+            end
+          end
+        end
       end
     end
-  end  
+  end
 end

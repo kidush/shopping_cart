@@ -42,15 +42,15 @@ class Cart
   def total_price(tax: false)
     total =
       cart
-        .reduce(0) { |sum, product| sum += (product.price / 100.0)  }
+        .reduce(0) { |sum, product| sum += (product.price / 100.0) }
         .round(2)
 
     return total unless tax
 
-    total + sale_tax
+    total + total_tax
   end
 
-  def sale_tax
+  def total_tax
     ((total_price * (TAX_RATE_PERCENT)) / 100.0).round(2)
   end
 
