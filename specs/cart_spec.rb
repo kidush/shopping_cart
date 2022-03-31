@@ -100,14 +100,6 @@ RSpec.describe Cart do
           end
         end
 
-        # Given the customer has 4 _Dove Soaps_ and 2 _Axe Deos_ in their cart
-        # 	When the customer removes 1 _Dove Soap_
-        # 	Then the number of _Dove Soaps_ should be 3
-        # 	And the total & the sales tax should reflect the change
-        # 	Expected totals =>
-        # 		Total tax = 39.99
-        # 		Total price = 359.94
-
         context 'Given the customer has 4 _Dove Soaps_ and 2 _Axe Deos_ in their cart' do
           context 'When the customer removes 1 _Dove Soap_' do
             before(:each) do
@@ -131,6 +123,22 @@ RSpec.describe Cart do
 
             it 'And the total tax should reflect the change' do
               expect(@cart.total_tax).to eq(39.99)
+            end
+          end
+        end
+
+        context 'Given there is a Buy 2 Get 3rd Free offer on _Dove Soap_' do
+          context 'When I add 2 _Dove Soap_ to the cart' do
+            before(:each) do
+              product_a = Product.new("Dove Soaps", 3999)
+
+              @cart = described_class.new
+              @cart.add(product: product_a, amount: 2)
+            end
+
+            it 'Then the discount is not applied to the cart' do
+              expect(@cart.total_tax).to eq 10
+              expect(@cart.total_price(tax: true)).to eq 89.98
             end
           end
         end
